@@ -7,8 +7,8 @@ output:
     toc_float: true
     toc_depth: 3
     fig_caption: true
-    fig_width: 6
-    fig_height: 4
+    fig_width: 8
+    fig_height: 6
     code_folding: none
 author: 
   name: "Juho Pirhonen"
@@ -17,7 +17,6 @@ date: "18/12/2017"
 css: styles.css
 ---
 <script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
-
 ***
   
 ```{r child = "1_intro.Rmd"}

@@ -33,13 +33,21 @@ df <- read.csv("data/human.csv") %>% tbl_df()
 ```
 This dataset contains `r nrow(df)` obseravtions and `r ncol(df)-1` variables exploring dependancy between proxy variables of human developement and gender (in)equality by country. The data originates from http://hdr.undp.org/en/data. Details of data-wrangling can be found [here](https://github.com/Juhous/create_human.R).
 
+HDI attempts to describe quality of life -- or how developed a country is, and [comprises of](http://hdr.undp.org/en/content/human-development-index-hdi) life expectancy, education and GNI per capita. 
+
+In this exercise, I explore whether differences, between genders, in education or participation to labor force correlate with HDI, and furthermore, what factors might correlate with gender (in)equality.
+
 ## Study variables
 
 | Variable | Description |
 |------|---------|
-| GNIC | Gross National Income per capita |
+| HDI | Human development index |
 | lifeExp | Life expectancy | 
 | eduExp | Expected years of education |
+| meanEdu | Average years of education |
+| GNIC | Gross National Income per capita |
+| GNICr_HDIr | GNI-rank - HDI-rank |
+| GII | Gender inequality index |
 | matMort | Maternal mortality ratio |
 | adolBirthRate | Adolescent birth rate |
 | reprParl | Percetange of female representatives in parliament |
@@ -47,8 +55,8 @@ This dataset contains `r nrow(df)` obseravtions and `r ncol(df)-1` variables exp
 | edu2M | Proportion of males with at least secondary education |
 | labF | Proportion of females in the labour force |
 | labM | Proportion of males in the labour force |
-| eduRatio | ratio edu2F and edu2M |
-| labRatio | ratio edu2F and edu2M |
+| eduRatio | Ratio between edu2F and edu2M |
+| labRatio | Ratio between labF and labM |
 
 
 # Exploratory Data Analysis
@@ -60,6 +68,8 @@ df %>% select(-country) %>% summaryKable() %>%
   kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
   scroll_box(width = "100%")
 ```
+
+These values display no alarming features. Interestingly median of eduRatio is ~1, which I would've expected to be much smaller. 
 
 ## Graphical overview
 ```{R}
@@ -76,7 +86,7 @@ df %>% gather(key="var", value = "value", HDI:labRatio) %>%
 
 Most variables are distributed normally, but GNIC and matMort might benefit from logarithmic conversion. 
 
-```{r}
+```{r, fig.width=5}
 #Hidden
 # Save a plot of non-normally distributed variables
 p1 <- df %>% 
@@ -92,6 +102,7 @@ p1 <- df %>%
 df %<>% mutate_at(vars(GNIC, matMort, adolBirthRate), funs(log10)) %>% 
   rename_at(vars(GNIC, matMort, adolBirthRate), 
             funs(paste(., "log", sep="_")))
+write.csv(df, "data/df.csv", row.names = F) # Need to access this dataframe on later .Rmds
 
 # Store a plot of new values
 p2 <- df %>% 
@@ -106,7 +117,29 @@ p2 <- df %>%
 #Show plots
 multiplot(p1,p2, cols = 1)
 
-write.csv(df, "data/df.csv")
 ```
 
 Now the variables are distributed more normally. 
+
+```{r, fig.width: 10, fig_height: 10}
+#Hidden
+df %>% select(-country) %>% ggpairs(
+  title = "Study variable overview",
+  upper = list(continuous = wrap("cor", size = 2, color = "black")),
+  lower = list(
+    continuous = wrap("points", alpha = .2, size = .4),
+    combo = wrap("facethist", bins = 20))) +
+  theme(axis.text.x = element_text(
+                  angle = 90,
+                  color = "black",
+                  size = 4,
+                  vjust = .5),
+      axis.text.y = element_text(color = "black", size = 4),
+      strip.text = element_text(size = 5))
+```
+
+This graph contains a wealth of information and plenty of time should be used to familiarize oneself with it. From the scatterplots, we can conclude that many of the variables correlate with each other, and importantly, that no obvious non-linear relationships emerge from the data. 
+
+EduRatio, first of our primary variables of interest, exhibits moderate positive correlation R=0,68. Eyeballing the relationship to GII seems interesting; for most of GII-spectrum there is no correlation, but after a certain threshold, a negative slope appears (i.e. GII correlates negatively with eduRatio). 
+
+LabRatio, the second of our primary variables of interest exhibits no correlation with GII or HDI. 

@@ -18,3 +18,17 @@ css: styles.css
 ---
 <script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
 
+
+
+```{r}
+#Hidden
+source("helper_functions.R")
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(GGally)
+library(tidyr)
+library(stringr)
+library(dplyr, warn.conflicts = F)
+df <- read.csv("data/df.csv") %>% tbl_df()
+```
