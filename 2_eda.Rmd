@@ -1,14 +1,16 @@
 # Load data
-```{R}
+```{R, echo = F}
 #Hidden
 source("helper_functions.R")
+library(magrittr)
 library(knitr)
 library(kableExtra)
 library(ggplot2)
 library(GGally)
-library(tidyr)
+library(tidyr, warn.conflicts = F)
 library(stringr)
 library(dplyr, warn.conflicts = F)
+#note
 df <- read.csv("data/human.csv")
 ```
 This dataset contains `r nrow(df)` obseravtions and `r ncol(df)-1` variables exploring dependancy between proxy variables of human developement and gender (in)equality by country. The data originates from http://hdr.undp.org/en/data. Details of data-wrangling can be found [here](https://github.com/Juhous/IODS-final/blob/master/create_human.R).
@@ -70,7 +72,6 @@ p1 <- df %>%
 #Log conversion for non-normal values
 df %<>% mutate(matMort = log10(matMort)) %>% 
   rename(matMort_log = matMort)
-write.csv(df, "data/df.csv", row.names = F) # Need to access this dataframe on later .Rmds
 
 # Store a plot of new values
 p2 <- df %>% 
@@ -120,3 +121,7 @@ EduRatio exhibits moderate positive correlation R=0,68. The relationship is not 
 
 
 The actual gender inequality index correlates moderately and negatively  with the HDI (and actually, all components of HDI, not shown). 
+
+```{r, echo = F}
+write.csv(df, "data/df.csv", row.names = F) # Need to access this dataframe on later .Rmds
+```

@@ -1,17 +1,61 @@
-# Linear regression
-We start by analyzing the proposed correlations between HDI and maternal mortality, adolscent birth rate, and education ratio. 
+---
+title: "IODS course project"
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    fig_caption: true
+    fig_width: 8
+    fig_height: 6
+    code_folding: none
+author: 
+  name: "Juho Pirhonen"
+  email: juho.pirhonen@helsinki.fi
+date: "18/12/2017"
+css: styles.css
+---
+<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
 ```{r, echo = F}
 #Hidden
 source("helper_functions.R")
+library(magrittr)
 library(knitr)
 library(kableExtra)
 library(ggplot2)
 library(GGally)
-library(tidyr)
+library(tidyr, warn.conflicts = F)
 library(stringr)
 library(dplyr, warn.conflicts = F)
+#note
 df <- read.csv("data/df.csv")
 ```
+# Wrangling eduRatio
+## Reasoning
+Earlier I stated that there seems to be some kind of plateu part in the correlation between HDI and education ratio (ie. after certain threshold, correlation between the variables fades). I guess that in countries with low education, there is also high inequality, and reduction of this inter-gender difference only helps so far.
+
+## Binning education ratio
+```{r, fig.width=8, fig.height=4}
+#Hidden
+df %<>% mutate(eduRatioT = ntile(df$eduRatio, 5))
+p1 <- ggplot(df) + 
+  geom_point(aes(eduRatio, HDI, color = as.factor(eduRatioT))) +
+  scale_color_discrete(guide = FALSE)
+
+df %<>% mutate(eduIneq = abs(1-eduRatio))
+p2 <- ggplot(df) + 
+  geom_point(aes(eduIneq, HDI, color = as.factor(eduRatioT))) +
+  scale_color_discrete(name = "EduRatio \n quintile") +
+  theme(legend.position = c(.9, .85))
+
+multiplot(p1, p2, cols = 2)
+```
+
+Based on this plot, my initial assumption wasn't entirely correct. Yes, HDI increases with eduRatio, but seems to peak when there is no difference between genders, and decreases after that. 
+
+# Linear regression
+We start by analyzing the proposed correlations between HDI and maternal mortality, adolscent birth rate, and education ratio. 
 
 ## First model
 ```{R, out.width = "70%"}
@@ -111,11 +155,7 @@ plot(cooks.distance(model), norm.res, xlab = "Cook's distance", ylab = "Standard
 ```
 ```{r, echo=F}
 autoimage::reset.par()
-```
 
-## Summary of the final model
-```{r}
-summary(model)
 ```
 According to diagnostic plots, this model has no critical errors:  
 1. Residuals are the difference between fitted and the actual value. In this plot we see no clustering, or any other patterns, that could indicate problems in the model. **Variance of errors is constant**  
@@ -123,7 +163,16 @@ According to diagnostic plots, this model has no critical errors:
 3.  **In this model, no observations have high leverage.**  
 4.  **No single observation affects model too much.**  
 
-The model explains 87% of variance of HDI. All our explanatory variables correlate with significantly with HDI, although adolescent birth rate just barely. This low value is probably due to collinearity between maternal mortality and adolBirthRate. 
+## Summary of the final model
+```{r}
+summary(model)
+```
+
+
+The model explains 89% of variance of HDI. All our explanatory variables correlate with significantly with HDI, although adolescent birth rate just barely. This low value is probably due to collinearity between maternal mortality and adolBirthRate. 
 
 It'd most interesting to explore why Belarus and Myanmar were such a strong outliers in this model. My gut-feeling would be that in case of Myanmar has fairly low rates of maternal mortality and adolescent birth rate, and that HDI is lagging behind rapid changes in these values. For Belarus, I'd suppose that it has relatively high HDI compared to differences in education. These are merely my personal ponderings and I will not explore these outliers more deeply. 
 
+```{r, echo = F}
+write.csv(df, "data/df_out.csv", row.names = F) # Need to access this dataframe on later .Rmds
+```
