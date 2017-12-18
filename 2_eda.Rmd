@@ -11,7 +11,7 @@ library(stringr)
 library(dplyr, warn.conflicts = F)
 df <- read.csv("data/human.csv")
 ```
-This dataset contains `r nrow(df)` obseravtions and `r ncol(df)-1` variables exploring dependancy between proxy variables of human developement and gender (in)equality by country. The data originates from http://hdr.undp.org/en/data. Details of data-wrangling can be found [here](https://github.com/Juhous/create_human.R).
+This dataset contains `r nrow(df)` obseravtions and `r ncol(df)-1` variables exploring dependancy between proxy variables of human developement and gender (in)equality by country. The data originates from http://hdr.undp.org/en/data. Details of data-wrangling can be found [here](https://github.com/Juhous/IODS-final/blob/master/create_human.R).
 
 HDI attempts to describe quality of life -- or how developed a country is, and [comprises of](http://hdr.undp.org/en/content/human-development-index-hdi) life expectancy, education and GNI per capita. 
 

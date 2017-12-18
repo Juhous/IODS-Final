@@ -6,3 +6,6 @@ This is my Final assignment for the University of Helsinki course: [Introduction
 
 The _R-code_ used is stored and available for inspection in  [this GitHub repository](https://github.com/Juhous/IODS-final)
 
+## Extra
+
+Instead of following the instructions and making code-panel foldable, I decided to create my own [code-wrapper](https://github.com/Juhous/IODS-final/blob/master/showCodePanel.js), with some panels foldable and others always visible. If you find my solution too hard to evaluate, I'm happy to deliver the exercise as per your instructions. 
