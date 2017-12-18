@@ -20,7 +20,12 @@ css: styles.css
 
 ***
   
-```{r child = "chapter1.Rmd"}
+```{r child = "1_intro.Rmd"}
+```
+  
+***
+
+```{r child = "2_eda.Rmd"}
 ```
   
 ***

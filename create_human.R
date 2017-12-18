@@ -45,4 +45,8 @@ glimpse(human)
 # Check that only observations for countries (not areas) are included
 human$country
 
-write.csv(human, file = "data/human.csv")
+# Reorder to have country as 1st column. For clarity.
+human %<>% select(country, HDIr, HDI:labRatio)
+glimpse(human)
+
+write.csv(human, file = "data/human.csv", row.names = F)

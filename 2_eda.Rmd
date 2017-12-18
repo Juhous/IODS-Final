@@ -1,0 +1,65 @@
+---
+title: "IODS course project"
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    fig_caption: true
+    fig_width: 6
+    fig_height: 4
+    code_folding: none
+author: 
+  name: "Juho Pirhonen"
+  email: juho.pirhonen@helsinki.fi
+date: "18/12/2017"
+css: styles.css
+---
+<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
+
+# Load data
+```{R}
+#Hidden
+source("helper_functions.R")
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(GGally)
+library(tidyr)
+library(stringr)
+library(dplyr, warn.conflicts = F)
+df <- read.csv("data/human.csv") %>% tbl_df()
+```
+Data is from 
+
+# Exploratory Data Analysis
+## Study variables
+
+
+
+## Numercial overview
+```{r}
+summaryKable(df) %>% 
+  kable("html", align = "rrr", caption = "Data variable summary") %>%
+  kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(width = "100%")
+```
+
+## Graphical overview
+```{R, out.width = "100%"}
+#Hidden
+ggpairs(df,
+  title = "Study variable overview",
+  upper = list(continuous = wrap("cor", size = 2)),
+  lower = list(
+    continuous = wrap("points", alpha = .2, size = .3),
+    combo = wrap("facethist", bins = 20))) +
+theme(axis.text.x = element_text(
+                  angle = 90,
+                  color = "black",
+                  size = 6,
+                  vjust = .5),
+      axis.text.y = element_text(color = "black", size = 6))
+```
+Comment distribution eg
