@@ -10,7 +10,9 @@ output:
     fig_width: 6
     fig_height: 4
     code_folding: none
-author: "Juho Pirhonen"
+author: 
+  name: "Juho Pirhonen"
+  email: juho.pirhonen@helsinki.fi
 date: "18/12/2017"
 css: styles.css
 ---
