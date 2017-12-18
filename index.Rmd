@@ -33,3 +33,8 @@ css: styles.css
 ```
   
 ***
+
+```{r child = "4_lda.Rmd"}
+```
+  
+***

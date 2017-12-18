@@ -174,5 +174,5 @@ The model explains 89% of variance of HDI. All our explanatory variables correla
 It'd most interesting to explore why Belarus and Myanmar were such a strong outliers in this model. My gut-feeling would be that in case of Myanmar has fairly low rates of maternal mortality and adolescent birth rate, and that HDI is lagging behind rapid changes in these values. For Belarus, I'd suppose that it has relatively high HDI compared to differences in education. These are merely my personal ponderings and I will not explore these outliers more deeply. 
 
 ```{r, echo = F}
-write.csv(df, "data/df_out.csv", row.names = F) # Need to access this dataframe on later .Rmds
+write.csv(df, "data/df_inliers.csv", row.names = F) # Need to access this dataframe on later .Rmds
 ```
