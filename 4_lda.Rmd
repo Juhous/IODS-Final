@@ -1,22 +1,4 @@
----
-title: "IODS course project"
-output:
-  html_document:
-    theme: flatly
-    toc: true
-    toc_float: true
-    toc_depth: 3
-    fig_caption: true
-    fig_width: 8
-    fig_height: 6
-    code_folding: none
-author: 
-  name: "Juho Pirhonen"
-  email: juho.pirhonen@helsinki.fi
-date: "18/12/2017"
-css: styles.css
----
-<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
+# Linear discriminant analysis
 ```{r, echo = F}
 #Hidden
 source("helper_functions.R")
@@ -27,6 +9,76 @@ library(ggplot2)
 library(GGally)
 library(tidyr, warn.conflicts = F)
 library(stringr)
+library(MASS, warn.conflicts = F) #NOTE
 library(dplyr, warn.conflicts = F)
-df <- read.csv("data/df_out.csv")
+#note
+df <- read.csv("data/df_inliers.csv") %>% select(-c(GII, eduRatio, eduRatioT))
+row.names(df) <- df$country
+df %<>% select(-country)
 ```
+Next I wanted to explore LDA, a form of dimensionality reduction. 
+
+## LDA
+First, the dependent variable, HDI, is divided to 4 equally sized categories. All other variables are scaled to have 
+```{R}
+#Hidden
+# Explanatory variables are scaled
+df %<>% mutate_all(funs(scale))
+# sapply(df, sd)
+
+# HDI is divided into quartiles
+df$HDI <- ntile(df$HDI, 4) %>% 
+  factor(labels = c("low", "med-lo", "med-hi", "high"))
+
+# The data is sampled into training and testing sets
+sample_ind <- sample(nrow(df),  size = nrow(df) * 0.8)
+train <- df[sample_ind,]
+test <-  df[-sample_ind,]
+#data.frame(dim(train),dim(test))
+
+#LDA
+lda.fit <- lda(HDI ~ ., data = train)
+lda.fit
+```
+
+Almost all variation in the data is explained just by maternal mortality and education inequality. 
+
+## Visualising the mode
+```{r, out.width = "100%"}
+#Hidden
+library(plotly, warn.conflicts = F)
+
+# Plot the lda results
+points <- data.frame(HDI = train$HDI,
+                     lda = predict(lda.fit)$x)
+levels(points$HDI) %<>%  str_to_title()
+
+arrows <- coef(lda.fit) %>% 
+  data.frame(., label = rownames(.)) %>% arrange(desc(abs(LD1))) %>% 
+  mutate(LD1 = LD1*2.5, LD2 = LD2*2.5, LD3 = LD3*2.5, pos = 1) %>% 
+  rbind(., mutate(., LD1=0, LD2=0, LD3=0, pos =0)) 
+
+
+p1 <- plot_ly(arrows, x = ~LD1, y = ~LD2, z = ~LD3, 
+  type = "scatter3d" , color = ~label, colors = rep(rgb(0, 0, 0), 13),
+  opacity = .5, mode = "lines", hoverinfo = "name", showlegend = FALSE, 
+  line = list(width = 5))
+
+p2 <- plot_ly(points, x = ~lda.LD1, y = ~lda.LD2, z = ~lda.LD3, 
+    type = "scatter3d" , color = ~HDI, opacity = .75, hoverinfo = "none",
+    mode = "markers", marker = list(size = 3, width = 2)) %>% 
+  layout(title = "PCA",
+       scene = list(xaxis = list(title = "LDA1"),
+                    yaxis = list(title = "LDA2"),
+                    zaxis = list(title = "LDA3")))
+
+subplot(p1, p2)
+```
+
+
+## Testing the model
+```{R}
+table("HDI" = test$HDI, 
+      "Prediction" = predict(lda.fit, newdata = test)$class)
+```
+Model works very well. It correctly categorizes `r sum(test$HDI ==  predict(lda.fit, newdata = test)$class)`/`r nrow(test)` observations of the test set. 
