@@ -1,8 +1,8 @@
 # About the website
 
-This is my Final assigment for the Universit of Helsinki course: Introduction to Open Data Science (IODS).
+This is my Final assignment for the University of Helsinki course: Introduction to Open Data Science (IODS).
 
 ## Code repository
 
-The _R-code_ used is stored and available for inspection in  [this GitHub repository](https://github.com/Juhous/IODS-Final)
+The _R-code_ used is stored and available for inspection in  [this GitHub repository](https://github.com/Juhous/IODS-final)
 

@@ -1,0 +1,1 @@
+This repository contains the code for my [final assignment](https://juhous.github.io/IODS-project/) to a University of Helsinki course: [Introduction to Open Data Science (IODS).](https://courses.helsinki.fi/fi/hymy005/120776718) 
