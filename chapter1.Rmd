@@ -1,6 +1,6 @@
 # About the website
 
-This is my Final assignment for the University of Helsinki course: Introduction to Open Data Science (IODS).
+This is my Final assignment for the University of Helsinki course: [Introduction to Open Data Science (IODS).](https://courses.helsinki.fi/fi/hymy005/120776718) 
 
 ## Code repository
 
