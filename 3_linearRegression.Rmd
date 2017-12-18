@@ -1,0 +1,20 @@
+---
+title: "IODS course project"
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    fig_caption: true
+    fig_width: 8
+    fig_height: 6
+    code_folding: none
+author: 
+  name: "Juho Pirhonen"
+  email: juho.pirhonen@helsinki.fi
+date: "18/12/2017"
+css: styles.css
+---
+<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
+

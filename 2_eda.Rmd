@@ -7,8 +7,8 @@ output:
     toc_float: true
     toc_depth: 3
     fig_caption: true
-    fig_width: 6
-    fig_height: 4
+    fig_width: 8
+    fig_height: 6
     code_folding: none
 author: 
   name: "Juho Pirhonen"
@@ -31,35 +31,82 @@ library(stringr)
 library(dplyr, warn.conflicts = F)
 df <- read.csv("data/human.csv") %>% tbl_df()
 ```
-Data is from 
+This dataset contains `r nrow(df)` obseravtions and `r ncol(df)-1` variables exploring dependancy between proxy variables of human developement and gender (in)equality by country. The data originates from http://hdr.undp.org/en/data. Details of data-wrangling can be found [here](https://github.com/Juhous/create_human.R).
 
-# Exploratory Data Analysis
 ## Study variables
 
+| Variable | Description |
+|------|---------|
+| GNIC | Gross National Income per capita |
+| lifeExp | Life expectancy | 
+| eduExp | Expected years of education |
+| matMort | Maternal mortality ratio |
+| adolBirthRate | Adolescent birth rate |
+| reprParl | Percetange of female representatives in parliament |
+| edu2F | Proportion of females with at least secondary education |
+| edu2M | Proportion of males with at least secondary education |
+| labF | Proportion of females in the labour force |
+| labM | Proportion of males in the labour force |
+| eduRatio | ratio edu2F and edu2M |
+| labRatio | ratio edu2F and edu2M |
 
 
+# Exploratory Data Analysis
 ## Numercial overview
 ```{r}
-summaryKable(df) %>% 
-  kable("html", align = "rrr", caption = "Data variable summary") %>%
+#Hidden
+df %>% select(-country) %>% summaryKable() %>% 
+  kable("html", align = "rrr", caption = "Study variable summary") %>%
   kable_styling(bootstrap_options = c("hover", "condensed")) %>% 
   scroll_box(width = "100%")
 ```
 
 ## Graphical overview
-```{R, out.width = "100%"}
+```{R}
 #Hidden
-ggpairs(df,
-  title = "Study variable overview",
-  upper = list(continuous = wrap("cor", size = 2)),
-  lower = list(
-    continuous = wrap("points", alpha = .2, size = .3),
-    combo = wrap("facethist", bins = 20))) +
-theme(axis.text.x = element_text(
-                  angle = 90,
-                  color = "black",
-                  size = 6,
-                  vjust = .5),
-      axis.text.y = element_text(color = "black", size = 6))
+df %>% gather(key="var", value = "value", HDI:labRatio) %>%
+  mutate(var=ordered(var, names(df[2:17]))) %>%  #To retain order when facetting
+  ggplot() +
+  geom_density(aes(value)) + 
+  facet_wrap(~var, scales="free") +
+  labs(title = "Study variable distribution", 
+       y = "Density", x="Value") +
+  theme(axis.text.x = element_text(angle = 90))
 ```
-Comment distribution eg
+
+Most variables are distributed normally, but GNIC and matMort might benefit from logarithmic conversion. 
+
+```{r}
+#Hidden
+# Save a plot of non-normally distributed variables
+p1 <- df %>% 
+  gather(key="var", value = "value", c(GNIC, matMort)) %>%
+  mutate(var=ordered(var, names(df[2:17]))) %>%  #To retain order when facetting
+  ggplot() +
+  geom_density(aes(value)) + 
+  facet_wrap(~var, scales="free") +
+  labs(title = "Before log-conv", 
+       y = "Density", x="Value") 
+
+#Log conversion for non-normal values
+df %<>% mutate_at(vars(GNIC, matMort, adolBirthRate), funs(log10)) %>% 
+  rename_at(vars(GNIC, matMort, adolBirthRate), 
+            funs(paste(., "log", sep="_")))
+
+# Store a plot of new values
+p2 <- df %>% 
+  gather(key="var", value = "value", c(GNIC_log, matMort_log)) %>%
+  mutate(var=ordered(var, names(df[2:17]))) %>%  #To retain order when facetting
+  ggplot() +
+  geom_density(aes(value)) + 
+  facet_wrap(~var, scales="free") +
+  labs(title = "After log-conv", 
+       y = "Density", x = "Value") 
+
+#Show plots
+multiplot(p1,p2, cols = 1)
+
+write.csv(df, "data/df.csv")
+```
+
+Now the variables are distributed more normally. 
