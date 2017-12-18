@@ -1,26 +1,6 @@
----
-title: "IODS course project"
-output:
-  html_document:
-    theme: flatly
-    toc: true
-    toc_float: true
-    toc_depth: 3
-    fig_caption: true
-    fig_width: 8
-    fig_height: 6
-    code_folding: none
-author: 
-  name: "Juho Pirhonen"
-  email: juho.pirhonen@helsinki.fi
-date: "18/12/2017"
-css: styles.css
----
-<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
-
-
-
-```{r}
+# Linear regression
+We start by analyzing the proposed correlations between HDI and maternal mortality, adolscent birth rate, and education ratio. 
+```{r, echo = F}
 #Hidden
 source("helper_functions.R")
 library(knitr)
@@ -30,5 +10,120 @@ library(GGally)
 library(tidyr)
 library(stringr)
 library(dplyr, warn.conflicts = F)
-df <- read.csv("data/df.csv") %>% tbl_df()
+df <- read.csv("data/df.csv")
 ```
+
+## First model
+```{R, out.width = "70%"}
+#Hidden
+
+# New model
+model <- lm(HDI ~ matMort_log + adolBirthRate + eduRatio, 
+             data = df)
+
+## Regression plots
+par(mfrow = c(2,2), oma = c(0, 0, 2, 0), 
+    mar = c(2.5,3,2,0.5), 
+    mgp = c(1.5,.5,0))
+
+
+plot(model, which = c(1,2), add.smooth = T)
+
+norm.res <- model$residuals/(sqrt(deviance(model)/df.residual(model))*sqrt(1-hatvalues(model)))
+# Counted the normalized residuals long way for fun. Following code can be used to check results
+# sum(norm.res != rstandard(model))
+
+aa <- df$HDI
+leverage <- (aa-mean(aa))^2/sum((aa-mean(aa))^2)+1/length(aa)
+
+plot(leverage, norm.res, xlab = "Leverage", ylab = "Standardized residuals")
+plot(cooks.distance(model), norm.res, xlab = "Cook's distance", ylab = "Standardized residuals")
+```
+```{r, echo=F}
+autoimage::reset.par()
+```
+
+Based on the Cook's distance, our model is bogged with a influential outlier. The observation in question is `r df[tail(order(cooks.distance(model)),1),1] %>% as.character.factor()`, which is excluded from further analysis. 
+
+## Second model
+```{R, out.width = "70%"}
+#Hidden
+
+# Remove the outlier
+df <- df[-tail(order(cooks.distance(model)),1),]
+
+# New model
+model <- lm(HDI ~ matMort_log + adolBirthRate + eduRatio, 
+             data = df)
+
+## Regression plots
+par(mfrow = c(2,2), oma = c(0, 0, 2, 0), 
+    mar = c(2.5,3,2,0.5), 
+    mgp = c(1.5,.5,0))
+
+
+plot(model, which = c(1,2), add.smooth = T)
+
+norm.res <- model$residuals/(sqrt(deviance(model)/df.residual(model))*sqrt(1-hatvalues(model)))
+# Counted the normalized residuals long way for fun. Following code can be used to check results
+# sum(norm.res != rstandard(model))
+
+aa <- df$HDI
+leverage <- (aa-mean(aa))^2/sum((aa-mean(aa))^2)+1/length(aa)
+
+plot(leverage, norm.res, xlab = "Leverage", ylab = "Standardized residuals")
+plot(cooks.distance(model), norm.res, xlab = "Cook's distance", ylab = "Standardized residuals")
+```
+```{r, echo=F}
+autoimage::reset.par()
+```
+
+There appears to be one more outlier, with high influence. This time it's `r df[tail(order(cooks.distance(model)),1),1] %>% as.character.factor()`, which is excluded from further analysis. 
+
+## Final model
+```{R, out.width = "70%"}
+#Hidden
+
+# Remove the outlier
+df <- df[-tail(order(cooks.distance(model)),1),]
+
+# New model
+model <- lm(HDI ~ matMort_log + adolBirthRate + eduRatio, 
+             data = df)
+
+## Regression plots
+par(mfrow = c(2,2), oma = c(0, 0, 2, 0), 
+    mar = c(2.5,3,2,0.5), 
+    mgp = c(1.5,.5,0))
+
+
+plot(model, which = c(1,2), add.smooth = T)
+
+norm.res <- model$residuals/(sqrt(deviance(model)/df.residual(model))*sqrt(1-hatvalues(model)))
+# Counted the normalized residuals long way for fun. Following code can be used to check results
+# sum(norm.res != rstandard(model))
+
+aa <- df$HDI
+leverage <- (aa-mean(aa))^2/sum((aa-mean(aa))^2)+1/length(aa)
+
+plot(leverage, norm.res, xlab = "Leverage", ylab = "Standardized residuals")
+plot(cooks.distance(model), norm.res, xlab = "Cook's distance", ylab = "Standardized residuals")
+```
+```{r, echo=F}
+autoimage::reset.par()
+```
+
+## Summary of the final model
+```{r}
+summary(model)
+```
+According to diagnostic plots, this model has no critical errors:  
+1. Residuals are the difference between fitted and the actual value. In this plot we see no clustering, or any other patterns, that could indicate problems in the model. **Variance of errors is constant**  
+2. The Q-Q plot demonstrates that model performs well with median values, but at low values, it starts to accumulate error.  
+3.  **In this model, no observations have high leverage.**  
+4.  **No single observation affects model too much.**  
+
+The model explains 87% of variance of HDI. All our explanatory variables correlate with significantly with HDI, although adolescent birth rate just barely. This low value is probably due to collinearity between maternal mortality and adolBirthRate. 
+
+It'd most interesting to explore why Belarus and Myanmar were such a strong outliers in this model. My gut-feeling would be that in case of Myanmar has fairly low rates of maternal mortality and adolescent birth rate, and that HDI is lagging behind rapid changes in these values. For Belarus, I'd suppose that it has relatively high HDI compared to differences in education. These are merely my personal ponderings and I will not explore these outliers more deeply. 
+

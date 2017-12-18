@@ -28,3 +28,8 @@ css: styles.css
 ```
   
 ***
+
+```{r child = "3_linearRegression.Rmd"}
+```
+  
+***

@@ -50,6 +50,9 @@ human %<>% select(country, HDIr, HDI:labRatio)
 glimpse(human)
 
 #Finally, decided to exclude HRIr and GIIr, as those contain duplicate information (HDI, GII)
-human %<>% select(-one_of("HDIr", "GIIr"))
+human %<>% select(-one_of("HDIr", "GIIr")) %>% 
+  select(-(lifeExp:GNICr_HDIr)) %>%
+  select(-(edu2F:labM))
+glimpse(human)
 
 write.csv(human, file = "data/human.csv", row.names = F)
