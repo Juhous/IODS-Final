@@ -1,0 +1,67 @@
+h1 {
+   text-transform: uppercase;
+}
+
+.panel {
+    margin-bottom: 0;
+}
+
+.panel-heading{
+  padding: 2px 7px 2px 7px;
+  font-size: 7pt;
+}
+
+pre {
+    display: block;
+    padding: 10px;
+    margin: 0 0 0;
+    font-size: 14px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #7b8a8b;
+    background-color: #fff;
+    border: 1px solid #cccccc;
+    border-radius: 4px
+}
+
+hr {
+    display: block;
+    border-top: 5px solid #222;
+}
+
+td {
+    white-space: nowrap;
+}
+
+caption {
+    font-size: 16px;
+    color: #000000;
+}
+
+.btn-block {
+ padding: 3px 3px; 
+ margin-top: 1px;
+ background-color: #ecf0f1
+}
+
+.showopt {
+  background-color: #004c93;
+  color: #FFFFFF; 
+  width: 100px;
+  height: 20px;
+  text-align: center;
+  vertical-align: middle !important;
+  float: right;
+  font-family: sans-serif;
+  border-radius: 8px;
+}
+
+.showopt:hover {
+    background-color: #dfe4f2;
+    color: #004c93;
+}
+
+pre.plot {
+  background-color: white !important;
+}
