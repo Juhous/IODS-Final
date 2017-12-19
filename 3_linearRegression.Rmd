@@ -1,22 +1,4 @@
----
-title: "IODS course project"
-output:
-  html_document:
-    theme: flatly
-    toc: true
-    toc_float: true
-    toc_depth: 3
-    fig_caption: true
-    fig_width: 8
-    fig_height: 6
-    code_folding: none
-author: 
-  name: "Juho Pirhonen"
-  email: juho.pirhonen@helsinki.fi
-date: "18/12/2017"
-css: styles.css
----
-<script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
+# Wrangling eduRatio
 ```{r, echo = F}
 #Hidden
 source("helper_functions.R")
@@ -31,7 +13,6 @@ library(dplyr, warn.conflicts = F)
 #note
 df <- read.csv("data/df.csv")
 ```
-# Wrangling eduRatio
 ## Reasoning
 Earlier I stated that there seems to be some kind of plateu part in the correlation between HDI and education ratio (ie. after certain threshold, correlation between the variables fades). I guess that in countries with low education, there is also high inequality, and reduction of this inter-gender difference only helps so far.
 

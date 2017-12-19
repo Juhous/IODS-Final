@@ -87,6 +87,7 @@ multiplot(p1,p2, cols = 2)
 
 Clearly the distribution is better after the log-conversion. 
 
+## Overview of correlations
 ```{r, fig.width: 10, fig_height: 10}
 #Hidden
 p <- df %>% select(-country) %>% ggpairs(
