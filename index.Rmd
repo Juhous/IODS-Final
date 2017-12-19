@@ -17,13 +17,14 @@ date: "18/12/2017"
 css: styles.css
 ---
 <script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
-# Abstract
-In this exercise we analyse correlation between HDI and gender (in)equality. Our results indicate strong correlation between main determinants of GII and HDI. We cannot prove causation, but merely suggest that gender equality should be considered when trying to improve HDI. 
-
 ***
   
 ```{r child = "1_intro.Rmd"}
 ```
+***
+
+# Abstract
+In this exercise we analyse correlation between HDI and gender (in)equality. Our results indicate strong correlation between main determinants of GII and HDI. We cannot prove causation, but merely suggest that gender equality should be considered when trying to improve HDI. 
   
 ***
 
