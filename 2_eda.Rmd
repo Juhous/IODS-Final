@@ -1,4 +1,4 @@
-# Load data
+# The data
 ```{R, echo = F}
 #Hidden
 source("helper_functions.R")
@@ -33,6 +33,7 @@ In this exercise, I explore whether determinats of GII  correlate with HDI. My h
 | eduRatio | Ratio between edu2F and edu2M |
 | labRatio | Ratio between labF and labM |
 
+***
 
 # Exploratory Data Analysis
 ## Numercial overview
