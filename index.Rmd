@@ -17,6 +17,9 @@ date: "18/12/2017"
 css: styles.css
 ---
 <script src=showCodePanel.js type="text/javascript" character="UTF-8"></script>
+# Abstract
+In this exercise we analyse correlation between HDI and gender (in)equality. Our results indicate strong correlation between main determinants of GII and HDI. We cannot prove causation, but merely suggest that gender equality should be considered when trying to improve HDI. 
+
 ***
   
 ```{r child = "1_intro.Rmd"}
@@ -38,3 +41,10 @@ css: styles.css
 ```
   
 ***
+
+# Discussion
+In this study, we explored wheter determinants of GII correlate with HDI. Our analysis concludes that education inequality, and more importantly, maternal mortality correlate strongly with HDI. On our linear regression model, we could explain nearly 90% of variance in HDI with just maternal mortality, adolescent birth rate and education inequality. Same trend was clearly visible in LDA.  
+
+Interestingly, we identified couple outliers (Belarus and Myanmar), both of which merit further studies. 
+
+Based on these findings, which are in line with our current understanding of developemental drivers, improving gender euqlity should help raise HDI. These results should be considered when deciding on interventions for raising HDI. 

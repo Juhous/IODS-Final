@@ -1,5 +1,5 @@
 # Linear discriminant analysis
-```{r, echo = F}
+```{r, echo = F, warning=F, message=F}
 #Hidden
 source("helper_functions.R")
 library(magrittr)
@@ -10,6 +10,7 @@ library(GGally)
 library(tidyr, warn.conflicts = F)
 library(stringr)
 library(MASS, warn.conflicts = F) #NOTE
+detach("package:dplyr", unload=TRUE)
 library(dplyr, warn.conflicts = F)
 #note
 df <- read.csv("data/df_inliers.csv") %>% select(-c(GII, eduRatio, eduRatioT))

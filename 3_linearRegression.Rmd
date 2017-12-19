@@ -54,6 +54,8 @@ multiplot(p1, p2, cols = 2)
 
 Based on this plot, my initial assumption wasn't entirely correct. Yes, HDI increases with eduRatio, but seems to peak when there is no difference between genders, and decreases after that. 
 
+***
+
 # Linear regression
 We start by analyzing the proposed correlations between HDI and maternal mortality, adolscent birth rate, and education ratio. 
 
